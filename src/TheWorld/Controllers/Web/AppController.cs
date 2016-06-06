@@ -36,15 +36,16 @@ namespace TheWorld.Controllers.Web
         [HttpPost]
         public IActionResult Contact(ContactViewModel model)
         {
+            string email = Startup.Configuration["AppSettings:SiteEmailAddress"];
+
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                ModelState.AddModelError("", "Could not send email, configuration problems.");
+            }
+
             if (ModelState.IsValid)
             {
-                string email = Startup.Configuration["AppSettings:SiteEmailAddress"];
-
-                if (string.IsNullOrWhiteSpace(email))
-                {
-                    ModelState.AddModelError("", "Could not send email, configuration problems.");
-                }
-
+                
                 if (_iMailService.SendMail(
                     email,
                     email,
