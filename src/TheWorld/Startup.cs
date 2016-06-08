@@ -5,11 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TheWorld.Business.Interfaces;
 using TheWorld.Business.Services;
-
+using TheWorld.Data;
 
 namespace TheWorld
 {
@@ -34,11 +35,15 @@ namespace TheWorld
         {
             services.AddMvc();
 
+            services.AddEntityFramework()
+                .AddDbContext<WorldContext>();
+
             services.AddScoped<IMailService, DebugMailService>();
+            services.AddTransient<WorldContextSeedData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, WorldContextSeedData seeder)
         {
             app.UseStaticFiles();
 
@@ -50,6 +55,8 @@ namespace TheWorld
                     defaults: new { controller = "App", action = "Index" }
                 );
             });
+
+            seeder.EnsureSeedData();
         }
 
         public interface IApplicationEnvironment

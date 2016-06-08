@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TheWorld.Business.Interfaces;
+using TheWorld.Data;
 using TheWorld.ViewModels;
 
 namespace TheWorld.Controllers.Web
@@ -12,14 +13,21 @@ namespace TheWorld.Controllers.Web
     public class AppController : Controller
     {
         private readonly IMailService _iMailService;
+        private readonly WorldContext _worldContext;
 
-        public AppController(IMailService iMailService)
+        public AppController(IMailService iMailService, WorldContext worldContext)
         {
             _iMailService = iMailService;
+            _worldContext = worldContext;
         }
 
         public IActionResult Index()
         {
+            var trips = _worldContext
+                .Trips
+                .OrderBy(ob => ob.Name)
+                .ToList();
+
             return View();
         }
 
