@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TheWorld.Business.Interfaces;
 using TheWorld.Data;
+using TheWorld.Repository;
 using TheWorld.ViewModels;
 
 namespace TheWorld.Controllers.Web
@@ -13,22 +14,20 @@ namespace TheWorld.Controllers.Web
     public class AppController : Controller
     {
         private readonly IMailService _iMailService;
-        private readonly WorldContext _worldContext;
+        private readonly IWorldRepository _repository;
 
-        public AppController(IMailService iMailService, WorldContext worldContext)
+        public AppController(IMailService iMailService, IWorldRepository repository)
         {
             _iMailService = iMailService;
-            _worldContext = worldContext;
+            _repository = repository;
         }
 
         public IActionResult Index()
         {
-            var trips = _worldContext
-                .Trips
-                .OrderBy(ob => ob.Name)
-                .ToList();
+            var trips = _repository
+                .GetAllTrips();                
 
-            return View();
+            return View(trips);
         }
 
         public IActionResult About()
