@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,6 +13,8 @@ using TheWorld.ViewModels;
 
 namespace TheWorld.Controllers.Api
 {
+
+    [Authorize]
     [Route("api/trips")]
     public class TripController : Controller
     {
@@ -27,7 +30,8 @@ namespace TheWorld.Controllers.Api
         [HttpGet("")]
         public JsonResult Get()
         {
-            var results = Mapper.Map<IEnumerable<TripViewModel>>(_repository.GetAllTripsWithStops());
+            var trips = _repository.GetUserAllTripsWithStops(User.Identity.Name);
+            var results = Mapper.Map<IEnumerable<TripViewModel>>(trips);
 
             return Json(results);
         }
@@ -39,16 +43,17 @@ namespace TheWorld.Controllers.Api
             {
                 if (ModelState.IsValid)
                 {
-                    var m = Mapper.Map<Trip>(vm);
+                    var newTrip = Mapper.Map<Trip>(vm);
+                    newTrip.UserName = User.Identity.Name;
 
                     // Save to the database
                     _logger.LogInformation("Attempting to save a new trip");
-                    _repository.AddTrip(m);
+                    _repository.AddTrip(newTrip);
 
                     if (_repository.SaveAll())
                     {
                         Response.StatusCode = (int)HttpStatusCode.Created;
-                        return Json(Mapper.Map<TripViewModel>(m));
+                        return Json(Mapper.Map<TripViewModel>(newTrip));
                     }
                 }
             }

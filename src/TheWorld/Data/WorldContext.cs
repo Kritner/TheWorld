@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TheWorld.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace TheWorld.Data
 {
-    public class WorldContext : DbContext
+    public class WorldContext : IdentityDbContext<WorldUser>
     {
         public WorldContext()
         {

@@ -9,7 +9,8 @@ namespace TheWorld.Business.Interfaces
         IEnumerable<Trip> GetAllTripsWithStops();
         void AddTrip(Trip newTrip);
         bool SaveAll();
-        Trip GetTripByName(string tripName);
-        void AddStop(string tripName, Stop newStop);
+        Trip GetTripByName(string tripName, string userName);
+        void AddStop(string tripName, string userName, Stop newStop);
+        IEnumerable<Trip> GetUserAllTripsWithStops(string name);
     }
 }
