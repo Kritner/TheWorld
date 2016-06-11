@@ -1,6 +1,8 @@
 {
   "AppSettings": {
-    "SiteEmailAddress": "TheWorld@gmail.com"
+    "SiteEmailAddress": "TheWorld@gmail.com",
+    "BingKey": "I'mUsingEnvironmentalVariablesNiceTryThough.LookIntoUserSecretsNext?"
+
   },
   "Data": {
     "WorldContextConnection": "Server=(localdb)\\ProjectsV13;Database=TheWorld;Trusted_Connection=true;MultipleActiveResultSets=true;"

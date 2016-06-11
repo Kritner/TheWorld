@@ -22,6 +22,19 @@ namespace TheWorld.Repository
             _logger = logger;
         }
 
+        public void AddStop(string tripName, Stop newStop)
+        {
+            var theTrip = GetTripByName(tripName);
+            newStop.Order = theTrip.Stops.Max(m => m.Order) + 1;
+            theTrip.Stops.Add(newStop);
+            _context.Stops.Add(newStop);
+        }
+
+        public void AddTrip(Trip newTrip)
+        {
+            _context.Add(newTrip);
+        }
+
         public IEnumerable<Trip> GetAllTrips()
         {
             try
@@ -53,6 +66,20 @@ namespace TheWorld.Repository
                 _logger.LogError("Could not get trips from database", ex);
                 return null;
             }
+        }
+
+        public Trip GetTripByName(string tripName)
+        {
+            return _context
+                .Trips
+                .Include(i => i.Stops)
+                .Where(w => w.Name == tripName)
+                .FirstOrDefault();
+        }
+
+        public bool SaveAll()
+        {
+            return _context.SaveChanges() > 0;
         }
     }
 }
