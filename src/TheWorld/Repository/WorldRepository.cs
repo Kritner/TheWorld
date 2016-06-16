@@ -73,7 +73,7 @@ namespace TheWorld.Repository
             return _context
                 .Trips
                 .Include(i => i.Stops)
-                .Where(w => w.Name == tripName && w.Name == userName)
+                .Where(w => w.Name == tripName && w.UserName == userName)
                 .FirstOrDefault();
         }
 

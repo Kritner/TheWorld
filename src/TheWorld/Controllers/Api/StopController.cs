@@ -61,6 +61,7 @@ namespace TheWorld.Controllers.Api
             }
         }
 
+        [HttpPost("")]
         public async Task<JsonResult> Post(string tripName, [FromBody]StopViewModel vm)
         {
             try
