@@ -39,8 +39,8 @@ namespace TheWorld
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
 
-            if (!env.IsDevelopment())
-                _requireHttps = true;
+            //if (!env.IsDevelopment())
+            //    _requireHttps = true;
 
             Configuration = builder.Build();
         }
@@ -102,13 +102,17 @@ namespace TheWorld
             ILoggerFactory loggerFactory)
         {
 
-            loggerFactory.AddDebug(LogLevel.Information);
-
             if (env.IsDevelopment())
             {
+                loggerFactory.AddDebug(LogLevel.Information);
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseBrowserLink();
+            }
+            else
+            {
+                loggerFactory.AddDebug(LogLevel.Error);
+                app.UseExceptionHandler("/App/Error");
             }
 
             app.UseStaticFiles();
